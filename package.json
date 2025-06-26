@@ -1,18 +1,19 @@
 {
   "dependencies": {
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "mysql": "^2.18.1",
+    "mysql2": "^3.14.1",
     "sequelize": "^6.37.7",
-    "sqlite3": "^5.1.7",
-    "type": "module"
+    "sqlite3": "^5.1.7"
   },
   "name": "trabajo-practico-4-stella-bernard",
   "version": "1.0.0",
   "main": "app.js",
-  "devDependencies": {},
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev" : "nodemon app.js"
+    "dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
