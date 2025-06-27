@@ -6,7 +6,7 @@ import { Character } from "../models/character.model.js"
 
 
 //traer a todos los pj
-export const characterController = async (req, res) =>{
+export const charactergetController = async (req, res) =>{
     try {
         const characters = await Character.findAll();
         res.status(200).json(characters)
