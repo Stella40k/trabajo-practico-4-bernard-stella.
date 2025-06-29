@@ -84,3 +84,12 @@ export const createCharacter = async (req, res) => {
     }
 };
 
+//actualizacion de personajes
+export const updateCharacter = async (req, res) =>{
+
+};
+
+export const deletCharacter = async(req, res) =>{
+
+};
+
