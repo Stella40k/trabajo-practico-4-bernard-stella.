@@ -131,6 +131,23 @@ export const updateCharacter = async (req, res) =>{
 
 //eliminar un pj
 export const deletCharacter = async(req, res) =>{
+    try {
+        //del req.params saca el id y guarda la id q venga en la ruta en la const id
+        const { id } = req.params;
+
+        //estoy buscando el pj con findbypk(id), estoy esperando q lo busqie en la bd y guardarlo en character
+        const character = await Character.findByPk(id);
+
+        if ((!character)) {
+            return res.status(404).json({message: "Personaje no encontrado :("})
+        }
+
+        //elimina de la bd al pj q se busco
+        await character.destroy()
+        return res.status(200).jdon({message: "Personaje eliminado"})
+    } catch (error) {
+        return res.status(500).jsin({message: "Error al eliminar personaje", error: error.message});
+    }
 
 };
 
