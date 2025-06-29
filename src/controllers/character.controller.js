@@ -6,7 +6,7 @@ import { Character } from "../models/character.model.js"
 
 
 //traer a todos los pj
-export const charactergetController = async (req, res) =>{
+export const getAllCharacter = async (req, res) =>{
     try {
         const characters = await Character.findAll();
         res.status(200).json(characters)
@@ -82,5 +82,72 @@ export const createCharacter = async (req, res) => {
         console.log(error)
         return res.status(500).json({message: "Error en el servidor! D:"});
     }
+};
+
+//actualizacion de personajes
+export const updateCharacter = async (req, res) =>{
+    try {
+        const { id } = req.params; //el id q metan sera del pj a actualizar 
+        const { name, ki, race, gender, description} = req.body; //los dstos nuevos vendran en forma de cuerpo y en arrays
+
+        const character = await Character.findByPk(id);
+        if (!character) {
+            return res.status(400).json({message: "Personaje no encontrado/No existente"});
+        }
+
+        //validacion de los datos nuevos q entren, tooooodo if else otra vez
+
+
+        //si nombre se actualizo debe reemplazar al viejo y respetar el trim
+        if(name) character.name = name.trim(); 
+
+        //si ki exite o es igual a 0 va a actualizar el existente y tiene q ser entero
+        if(ki || ki ===0) character.ki = parseInt(ki);
+
+        //si race existe entonces lo va a cambiar por el nuevo y respetara el trim q es sin espacios
+        if(race) character.race = race.trim();
+
+        //aca valida la existencia de gender, se fija si estan intentando actualizarlo
+        //compara el valor ingresado con MALE o FEMALE de la bd, en el caso de q no ingresen tal cual (con mayusculas)
+        //le pongo toUpperCase q hace q cualquier parecido con esas palabras la hagan en mayuscula
+        if(gender &&["MALE", "FEMALE"].includes(gender.toUpperCase())){
+            character.gender = gender.toUpperCase();
+            //si ingresa male, Male, MALE ingresa como valido y lo pone en mayus. si ingresa algun otro valor
+            //no entra
+        }
+
+        //reemplaza la descripcion vieja y con el valor trim hace q evite errores de tabulaciones, espacios solos o 
+        //espacios antes y despues del texto para evitar errores de busqueda
+        if(description) character.description = description.trim()
+
+        //espera los datos cambiados para guardar y mostrar el mensaje
+        await character.save()
+        res.status(200).json({message: "Personaje actualizado: ", character})
+
+    } catch (error) {
+        res.status(500).json({message: "Error en la actualizacion del pj", error:error.message})
+    }
+};
+
+//eliminar un pj
+export const deletCharacter = async(req, res) =>{
+    try {
+        //del req.params saca el id y guarda la id q venga en la ruta en la const id
+        const { id } = req.params;
+
+        //estoy buscando el pj con findbypk(id), estoy esperando q lo busqie en la bd y guardarlo en character
+        const character = await Character.findByPk(id);
+
+        if ((!character)) {
+            return res.status(404).json({message: "Personaje no encontrado :("})
+        }
+
+        //elimina de la bd al pj q se busco
+        await character.destroy()
+        return res.status(200).jdon({message: "Personaje eliminado"})
+    } catch (error) {
+        return res.status(500).jsin({message: "Error al eliminar personaje", error: error.message});
+    }
+
 };
 
